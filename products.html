@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>That Girl Store ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --pink-accent: #E05286; --pink-bg: #FFF5F7; }
+        body { font-family: 'Cairo', sans-serif; background: var(--pink-bg); margin: 0; }
+        .promo-bar { background: var(--pink-accent); color: white; padding: 10px; text-align: center; font-weight: bold; }
+        header { text-align: center; padding: 40px 20px; background: white; }
+        h1 { font-family: 'Amiri', serif; font-size: 3rem; color: var(--pink-accent); margin: 0; }
+        nav { background: white; padding: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        nav a { cursor: pointer; font-weight: 700; color: #4A323C; }
+        nav a:hover, nav a.active { color: var(--pink-accent); }
+        .page-section { display: none; }
+        .page-active { display: block; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
+        .product-card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .product-card img { width: 100%; height: 180px; object-fit: contain; border-radius: 15px; }
+        .order-btn { background: var(--pink-accent); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .delete-btn { background: #ff4757; color: white; border: none; padding: 8px; width: 100%; margin-top: 5px; border-radius: 8px; display: none; }
+        .admin-mode .delete-btn { display: block; }
+        .cart-icon { position: fixed; bottom: 20px; right: 20px; background: var(--pink-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; }
+        /* تصميم لوحة التحكم */
+        .admin-panel { max-width: 500px; margin: 30px auto; padding: 30px; background: white; border: 2px dashed var(--pink-accent); border-radius: 20px; display: none; }
+        .admin-mode .admin-panel { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="promo-bar"><span>✨ That Girl Store | أضيفي منتجاتكِ الجديدة بسهولة ✨</span></div>
+    <div class="cart-icon" onclick="sendWhatsAppCart()"><i class="fa-solid fa-cart-shopping"></i></div>
+
+    <header><h1>That Girl Store</h1></header>
+
+    <nav>
+        <a onclick="switchPage('home')">الرئيسية</a>
+        <a onclick="switchPage('offers')">العروض</a>
+        <a onclick="switchPage('bags')">الحقائب</a>
+        <a onclick="switchPage('makeup')">المكياج</a>
+        <a onclick="switchPage('scents')">العطور</a>
+        <a onclick="switchPage('accessories')">إكسسوارات</a>
+        <a onclick="switchPage('gifts')">هدايا</a>
+    </nav>
+
+    <div id="page-home" class="page-section page-active">
+        <div style="text-align:center; padding: 40px;">
+            <h2>لوحة التحكم الخاصة بك 💖</h2>
+            <input type="password" id="gate" placeholder="باسورد الإدارة..." style="padding:10px; border-radius:8px;">
+            <button onclick="openAdmin()" class="order-btn" style="width: auto; padding: 10px 20px;">دخول الأدمن</button>
+            
+            <!-- لوحة إضافة المنتجات -->
+            <div class="admin-panel" id="adminPanel">
+                <h3>إضافة منتج جديد</h3>
+                <input type="text" id="prodName" placeholder="اسم المنتج"><br><br>
+                <input type="number" id="prodPrice" placeholder="السعر"><br><br>
+                <select id="prodCat">
+                    <option value="offers">عروض</option><option value="bags">حقائب</option>
+                    <option value="makeup">مكياج</option><option value="scents">عطور</option>
+                    <option value="accessories">إكسسوارات</option><option value="gifts">هدايا</option>
+                </select><br><br>
+                <input type="file" id="prodFile"><br><br>
+                <button class="order-btn" onclick="addNewProduct()">نشر المنتج في المتجر</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-offers" class="page-section"><div id="container-offers" class="products-grid"></div></div>
+    <div id="page-bags" class="page-section"><div id="container-bags" class="products-grid"></div></div>
+    <div id="page-makeup" class="page-section"><div id="container-makeup" class="products-grid"></div></div>
+    <div id="page-scents" class="page-section"><div id="container-scents" class="products-grid"></div></div>
+    <div id="page-accessories" class="page-section"><div id="container-accessories" class="products-grid"></div></div>
+    <div id="page-gifts" class="page-section"><div id="container-gifts" class="products-grid"></div></div>
+
+    <script>
+        let cart = [];
+        const FIREBASE_URL = "https://the-girl-store-default-rtdb.firebaseio.com";
+        const PASSWORD = 'Zeyad@2007';
+
+        function switchPage(id) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('page-active'));
+            document.getElementById('page-' + id).classList.add('page-active');
+        }
+
+        function openAdmin() {
+            if(document.getElementById('gate').value === PASSWORD) {
+                document.body.classList.add('admin-mode');
+                alert("تم تفعيل لوحة التحكم!");
+            } else alert("باسورد غلط!");
+        }
+
+        async function loadAllProducts() {
+            const res = await fetch(`${FIREBASE_URL}/products.json`);
+            const data = await res.json();
+            ['offers','bags','makeup','scents','accessories','gifts'].forEach(c => document.getElementById('container-'+c).innerHTML = '');
+            for (let key in data) {
+                let p = data[key];
+                let card = `<div class="product-card">
+                        <img src="${p.img}">
+                        <h3>${p.name}</h3>
+                        <p>${p.price} ج.م</p>
+                        <button class="order-btn" onclick="addToCart('${p.name}', '${p.price}')">إضافة للسلة 🛒</button>
+                        <button class="delete-btn" onclick="deleteProduct('${key}')">🗑️ حذف</button>
+                    </div>`;
+                if(document.getElementById('container-'+p.cat)) document.getElementById('container-'+p.cat).innerHTML += card;
+            }
+        }
+
+        function deleteProduct(key) {
+            if(confirm("حذف المنتج؟")) fetch(`${FIREBASE_URL}/products/${key}.json`, { method: 'DELETE' }).then(() => loadAllProducts());
+        }
+
+        function addNewProduct() {
+            const file = document.getElementById('prodFile').files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                fetch(`${FIREBASE_URL}/products.json`, { method: 'POST', body: JSON.stringify({
+                    name: document.getElementById('prodName').value,
+                    price: document.getElementById('prodPrice').value,
+                    cat: document.getElementById('prodCat').value,
+                    img: reader.result
+                })}).then(() => { alert("تم النشر بنجاح!"); location.reload(); });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addToCart(name, price) { cart.push({name, price}); alert("🛒 تمت الإضافة"); }
+        function sendWhatsAppCart() {
+            let msg = "طلباتي من المتجر:%0A";
+            cart.forEach(item => msg += `- ${item.name} (${item.price} ج.م)%0A`);
+            window.open(`https://wa.me/201014090407?text=${msg}`);
+        }
+
+        loadAllProducts();
+    </script>
+</body>
+</html>
