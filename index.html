@@ -2,138 +2,357 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>That Girl Store ✨</title>
+    <title>The Girl Store ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --pink-accent: #E05286; --pink-bg: #FFF5F7; }
-        body { font-family: 'Cairo', sans-serif; background: var(--pink-bg); margin: 0; }
-        .promo-bar { background: var(--pink-accent); color: white; padding: 10px; text-align: center; font-weight: bold; }
-        header { text-align: center; padding: 40px 20px; background: white; }
-        h1 { font-family: 'Amiri', serif; font-size: 3rem; color: var(--pink-accent); margin: 0; }
-        nav { background: white; padding: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        nav a { cursor: pointer; font-weight: 700; color: #4A323C; }
-        nav a:hover, nav a.active { color: var(--pink-accent); }
+        /* الألوان الجديدة والخطوط */
+        :root { 
+            --pink-accent: #E05286; 
+            --pink-light: #FF8EAF;
+            --pink-bg: #FFF5F7; 
+            --text-dark: #4A323C;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+        }
+        body { font-family: 'Cairo', sans-serif; background: var(--pink-bg); margin: 0; color: var(--text-dark); overflow-x: hidden; }
+        
+        /* شريط العروض المتميز */
+        .promo-bar { 
+            background: linear-gradient(90deg, var(--pink-accent), var(--pink-light)); 
+            color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* الهيدر واللوجو */
+        header { text-align: center; padding: 40px 20px 20px; background: white; }
+        h1 { font-family: 'Amiri', serif; font-size: 3.5rem; color: var(--pink-accent); margin: 0; cursor: pointer; text-shadow: 2px 2px 4px rgba(224, 82, 134, 0.1); transition: 0.3s; }
+        h1:hover { transform: scale(1.02); }
+        
+        /* قائمة تنقل زجاجية (Glassmorphism) */
+        nav { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; 
+            position: sticky; top: 0; z-index: 999; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        nav a { cursor: pointer; font-weight: 700; color: var(--text-dark); text-decoration: none; padding: 5px 15px; border-radius: 20px; transition: 0.3s; }
+        nav a:hover, nav a.active { background: var(--pink-accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(224, 82, 134, 0.3); }
+
         .page-section { display: none; }
-        .page-active { display: block; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
-        .product-card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        .product-card img { width: 100%; height: 180px; object-fit: contain; border-radius: 15px; }
-        .order-btn { background: var(--pink-accent); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-        .delete-btn { background: #ff4757; color: white; border: none; padding: 8px; width: 100%; margin-top: 5px; border-radius: 8px; display: none; }
+        .page-active { display: block; animation: fadeInUp 0.6s ease-out forwards; }
+        
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* ترويسة مخصصة لكل قسم لتخطف العين */
+        .cat-header {
+            text-align: center; padding: 40px 20px; margin: 20px;
+            background: linear-gradient(135deg, white 0%, #ffeef2 100%);
+            border-radius: 25px; box-shadow: 0 10px 30px rgba(224, 82, 134, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .cat-header h2 { font-family: 'Amiri', serif; color: var(--pink-accent); font-size: 2.5rem; margin: 0 0 10px; }
+        .cat-header p { font-size: 1.1rem; color: #6b505c; margin: 0; }
+
+        /* شبكة المنتجات والكروت */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; padding: 0 20px 40px; }
+        
+        .product-card { 
+            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 15px; text-align: center; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04); transition: 0.4s;
+            border: 1px solid rgba(255,255,255,1);
+            position: relative; overflow: hidden;
+        }
+        .product-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 35px rgba(224, 82, 134, 0.15); 
+            border-color: #ffe0eb;
+        }
+        .product-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 15px; background: white; padding: 10px; box-sizing: border-box; transition: 0.3s; }
+        .product-card:hover img { transform: scale(1.05); }
+        
+        .product-card h3 { font-size: 1.2rem; margin: 15px 0 5px; color: var(--text-dark); }
+        .product-card p { font-size: 1.3rem; font-weight: bold; color: var(--pink-accent); margin: 0 0 15px; }
+        
+        /* زرار الإضافة للسلة الأنيق */
+        .order-btn { 
+            background: linear-gradient(135deg, var(--pink-accent), var(--pink-light)); 
+            color: white; border: none; padding: 12px; width: 100%; border-radius: 12px; 
+            cursor: pointer; font-weight: bold; font-family: 'Cairo', sans-serif; font-size: 1rem;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(224, 82, 134, 0.3);
+        }
+        .order-btn:hover { background: linear-gradient(135deg, var(--pink-light), var(--pink-accent)); box-shadow: 0 6px 20px rgba(224, 82, 134, 0.5); transform: translateY(-2px); }
+        
+        .delete-btn { background: #ff4757; color: white; border: none; padding: 8px; width: 100%; margin-top: 10px; border-radius: 8px; display: none; cursor: pointer; font-family: 'Cairo', sans-serif; }
         .admin-mode .delete-btn { display: block; }
-        .cart-icon { position: fixed; bottom: 20px; right: 20px; background: var(--pink-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; }
-        /* تصميم لوحة التحكم */
-        .admin-panel { max-width: 500px; margin: 30px auto; padding: 30px; background: white; border: 2px dashed var(--pink-accent); border-radius: 20px; display: none; }
-        .admin-mode .admin-panel { display: block; }
+        
+        /* أيقونة السلة العائمة */
+        .cart-icon { 
+            position: fixed; bottom: 30px; right: 30px; 
+            background: linear-gradient(135deg, var(--pink-accent), #ff6b9d); 
+            color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; 
+            cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(224, 82, 134, 0.5); transition: 0.3s; 
+        }
+        .cart-icon:hover { transform: scale(1.1) rotate(-5deg); }
+        .cart-count-badge {
+            position:absolute; top:-5px; right:-5px; background: white; color: var(--pink-accent); 
+            font-size:14px; font-weight: bold; border-radius:50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .admin-panel { max-width: 500px; margin: 30px auto; padding: 30px; background: white; border: 2px dashed var(--pink-accent); border-radius: 20px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .admin-mode .admin-panel { display: block; animation: fadeInUp 0.5s; }
+        .input-style { padding: 12px; border-radius: 10px; border: 1px solid #ddd; width: 90%; margin-bottom: 15px; font-family: 'Cairo', sans-serif; transition: 0.3s; background: #fafafa;}
+        .input-style:focus { border-color: var(--pink-accent); outline: none; background: white; box-shadow: 0 0 0 3px rgba(224, 82, 134, 0.1); }
+
+        .home-banner-container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        .home-banner { width: 100%; height: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: block; border: 5px solid white; }
+        
+        .loading-text { text-align: center; color: var(--pink-accent); font-weight: bold; padding: 50px; grid-column: 1 / -1; font-size: 1.2rem; }
+        
+        /* كارت "لا يوجد منتجات" الأنيق */
+        .empty-state {
+            grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+            background: white; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            color: #888;
+        }
+        .empty-state i { font-size: 3rem; color: #ffd6e4; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="promo-bar"><span>✨ That Girl Store | أضيفي منتجاتكِ الجديدة بسهولة ✨</span></div>
-    <div class="cart-icon" onclick="sendWhatsAppCart()"><i class="fa-solid fa-cart-shopping"></i></div>
+    <div class="promo-bar">✨ التوصيل مجاني للطلبات فوق 500 ج.م | اختاري ما يناسب جمالك ✨</div>
+    <div class="cart-icon" onclick="sendWhatsAppCart()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="cart-count-badge">0</span>
+    </div>
 
-    <header><h1>That Girl Store</h1></header>
+    <header><h1 onclick="secretLogin()">The Girl Store</h1></header>
 
     <nav>
-        <a onclick="switchPage('home')">الرئيسية</a>
-        <a onclick="switchPage('offers')">العروض</a>
-        <a onclick="switchPage('bags')">الحقائب</a>
-        <a onclick="switchPage('makeup')">المكياج</a>
-        <a onclick="switchPage('scents')">العطور</a>
-        <a onclick="switchPage('accessories')">إكسسوارات</a>
-        <a onclick="switchPage('gifts')">هدايا</a>
+        <a onclick="switchPage('home')" class="active" id="nav-home">الرئيسية</a>
+        <a onclick="switchPage('offers')" id="nav-offers">العروض 🔥</a>
+        <a onclick="switchPage('bags')" id="nav-bags">الحقائب 👜</a>
+        <a onclick="switchPage('makeup')" id="nav-makeup">المكياج 💄</a>
+        <a onclick="switchPage('scents')" id="nav-scents">العطور 🌸</a>
+        <a onclick="switchPage('accessories')" id="nav-accessories">إكسسوارات ✨</a>
+        <a onclick="switchPage('gifts')" id="nav-gifts">هدايا 🎁</a>
     </nav>
 
+    <!-- الصفحة الرئيسية -->
     <div id="page-home" class="page-section page-active">
-        <div style="text-align:center; padding: 40px;">
-            <h2>لوحة التحكم الخاصة بك 💖</h2>
-            <input type="password" id="gate" placeholder="باسورد الإدارة..." style="padding:10px; border-radius:8px;">
-            <button onclick="openAdmin()" class="order-btn" style="width: auto; padding: 10px 20px;">دخول الأدمن</button>
-            
-            <!-- لوحة إضافة المنتجات -->
+        <div class="home-banner-container">
+            <img src="https://placehold.co/1000x400/FFF5F7/E05286?text=Welcome+To+The+Girl+Store" alt="The Girl Store Banner" class="home-banner">
+            <div style="text-align: center; margin-top: 30px; color: var(--text-dark);">
+                <h2 style="font-family: 'Amiri', serif; font-size: 2.2rem; color: var(--pink-accent);">عالمكِ الخاص للجمال والأناقة</h2>
+                <p style="font-size: 1.1rem;">تصفحي أقسامنا واكتشفي أحدث صيحات الموضة المصممة خصيصاً لكِ.</p>
+            </div>
+        </div>
+
+        <div style="text-align:center; padding: 10px;">
             <div class="admin-panel" id="adminPanel">
-                <h3>إضافة منتج جديد</h3>
-                <input type="text" id="prodName" placeholder="اسم المنتج"><br><br>
-                <input type="number" id="prodPrice" placeholder="السعر"><br><br>
-                <select id="prodCat">
-                    <option value="offers">عروض</option><option value="bags">حقائب</option>
-                    <option value="makeup">مكياج</option><option value="scents">عطور</option>
+                <h3>🛠️ لوحة تحكم الإدارة السحرية</h3>
+                <input type="text" id="prodName" class="input-style" placeholder="اسم المنتج (مثال: حقيبة شانيل كلاسيك)">
+                <input type="number" id="prodPrice" class="input-style" placeholder="السعر بالجنيه">
+                <select id="prodCat" class="input-style">
+                    <option value="offers">العروض</option><option value="bags">الحقائب</option>
+                    <option value="makeup">المكياج</option><option value="scents">العطور</option>
                     <option value="accessories">إكسسوارات</option><option value="gifts">هدايا</option>
-                </select><br><br>
-                <input type="file" id="prodFile"><br><br>
-                <button class="order-btn" onclick="addNewProduct()">نشر المنتج في المتجر</button>
+                </select>
+                <input type="text" id="prodImgUrl" class="input-style" placeholder="رابط الصورة المباشر (URL)">
+                <button class="order-btn" onclick="addNewProduct()" id="publishBtn">نشر المنتج فوراً 🚀</button>
+                
+                <hr style="margin: 25px 0; border-top: 1px dashed #ffd6e4;">
+                <button class="delete-btn" style="background: #ff4757;" onclick="wipeAllOldData()">🚨 تفريغ المتجر بالكامل</button>
+                <button class="delete-btn" style="background: #4A323C;" onclick="logoutAdmin()">🔒 إغلاق الإدارة</button>
             </div>
         </div>
     </div>
 
-    <div id="page-offers" class="page-section"><div id="container-offers" class="products-grid"></div></div>
-    <div id="page-bags" class="page-section"><div id="container-bags" class="products-grid"></div></div>
-    <div id="page-makeup" class="page-section"><div id="container-makeup" class="products-grid"></div></div>
-    <div id="page-scents" class="page-section"><div id="container-scents" class="products-grid"></div></div>
-    <div id="page-accessories" class="page-section"><div id="container-accessories" class="products-grid"></div></div>
-    <div id="page-gifts" class="page-section"><div id="container-gifts" class="products-grid"></div></div>
+    <!-- الأقسام مع الترويسات الجذابة -->
+    <div id="page-offers" class="page-section">
+        <div class="cat-header"><h2>🔥 عروض حصرية تخطف القلب</h2><p>خصومات لا تفوتك على تشكيلة مختارة بعناية</p></div>
+        <div id="container-offers" class="products-grid"></div>
+    </div>
+    
+    <div id="page-bags" class="page-section">
+        <div class="cat-header"><h2>👜 تألقي بأرقى الحقائب</h2><p>تصميمات عصرية تكمل شياكتك في كل خروجة</p></div>
+        <div id="container-bags" class="products-grid"></div>
+    </div>
+    
+    <div id="page-makeup" class="page-section">
+        <div class="cat-header"><h2>💄 تألقي بأجمل إطلالة</h2><p>أفضل منتجات التجميل لبشرة مشرقة وجمال طبيعي</p></div>
+        <div id="container-makeup" class="products-grid"></div>
+    </div>
+    
+    <div id="page-scents" class="page-section">
+        <div class="cat-header"><h2>🌸 عطور تترك أثراً</h2><p>روائح ساحرة تدوم طويلاً وتعبر عن شخصيتك</p></div>
+        <div id="container-scents" class="products-grid"></div>
+    </div>
+    
+    <div id="page-accessories" class="page-section">
+        <div class="cat-header"><h2>✨ إكسسوارات تبرز جمالك</h2><p>لمسات صغيرة تصنع فرقاً كبيراً في أناقتك</p></div>
+        <div id="container-accessories" class="products-grid"></div>
+    </div>
+    
+    <div id="page-gifts" class="page-section">
+        <div class="cat-header"><h2>🎁 هدايا تصنع الذكريات</h2><p>أفكار هدايا مميزة لمن تحبين (أو لتدليل نفسك!)</p></div>
+        <div id="container-gifts" class="products-grid"></div>
+    </div>
 
     <script>
         let cart = [];
+        let allProductsData = null; 
         const FIREBASE_URL = "https://the-girl-store-default-rtdb.firebaseio.com";
         const PASSWORD = 'Zeyad@2007';
+
+        if(localStorage.getItem('isStoreAdmin') === 'true') document.body.classList.add('admin-mode');
 
         function switchPage(id) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('page-active'));
             document.getElementById('page-' + id).classList.add('page-active');
+            
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            if(document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+
+            if(id !== 'home') loadCategoryProducts(id);
         }
 
-        function openAdmin() {
-            if(document.getElementById('gate').value === PASSWORD) {
+        function secretLogin() {
+            if(localStorage.getItem('isStoreAdmin') === 'true') return; 
+            let pass = prompt("أدخل الرقم السري للإدارة:");
+            if(pass === PASSWORD) {
+                localStorage.setItem('isStoreAdmin', 'true');
                 document.body.classList.add('admin-mode');
                 alert("تم تفعيل لوحة التحكم!");
-            } else alert("باسورد غلط!");
+            } else if(pass !== null) alert("الرقم السري غير صحيح!");
         }
 
-        async function loadAllProducts() {
-            const res = await fetch(`${FIREBASE_URL}/products.json`);
-            const data = await res.json();
-            ['offers','bags','makeup','scents','accessories','gifts'].forEach(c => document.getElementById('container-'+c).innerHTML = '');
-            for (let key in data) {
-                let p = data[key];
-                let card = `<div class="product-card">
-                        <img src="${p.img}">
-                        <h3>${p.name}</h3>
-                        <p>${p.price} ج.م</p>
-                        <button class="order-btn" onclick="addToCart('${p.name}', '${p.price}')">إضافة للسلة 🛒</button>
-                        <button class="delete-btn" onclick="deleteProduct('${key}')">🗑️ حذف</button>
-                    </div>`;
-                if(document.getElementById('container-'+p.cat)) document.getElementById('container-'+p.cat).innerHTML += card;
+        function logoutAdmin() {
+            localStorage.removeItem('isStoreAdmin');
+            document.body.classList.remove('admin-mode');
+            alert("تم إغلاق لوحة التحكم.");
+            location.reload(); 
+        }
+
+        async function loadCategoryProducts(category) {
+            const container = document.getElementById('container-' + category);
+            if (!container) return;
+            if (container.children.length > 0 && !container.querySelector('.loading-text') && !container.querySelector('.empty-state')) return;
+
+            container.innerHTML = '<div class="loading-text">✨ جاري جلب أحدث المنتجات...</div>';
+
+            try {
+                if (!allProductsData) {
+                    const res = await fetch(`${FIREBASE_URL}/products.json`);
+                    allProductsData = await res.json();
+                }
+                
+                let cardsHtml = '';
+                let hasProducts = false;
+
+                if (allProductsData) {
+                    for (let key in allProductsData) {
+                        let p = allProductsData[key];
+                        if(p.cat === category) {
+                            hasProducts = true;
+                            cardsHtml += `
+                                <div class="product-card">
+                                    <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/200?text=صورة+غير+متاحة'">
+                                    <h3>${p.name}</h3>
+                                    <p>${p.price} ج.م</p>
+                                    <button class="order-btn" onclick="addToCart('${p.name}', '${p.price}')">إضافة للسلة 🛒</button>
+                                    <button class="delete-btn" onclick="deleteProduct('${key}', '${category}')">🗑️ حذف</button>
+                                </div>`;
+                        }
+                    }
+                }
+
+                if(hasProducts) {
+                    container.innerHTML = cardsHtml;
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fa-solid fa-box-open"></i>
+                            <h3>تشكيلة جديدة في الطريق إليكِ ✨</h3>
+                            <p>نعمل على إضافة أحدث المنتجات لهذا القسم قريباً، عودي لزيارتنا!</p>
+                        </div>`;
+                }
+            } catch (error) {
+                container.innerHTML = '<p style="text-align:center; width:100%; color:red; grid-column: 1 / -1;">عذراً، تأكدي من اتصالك بالإنترنت.</p>';
             }
         }
 
-        function deleteProduct(key) {
-            if(confirm("حذف المنتج؟")) fetch(`${FIREBASE_URL}/products/${key}.json`, { method: 'DELETE' }).then(() => loadAllProducts());
+        function deleteProduct(key, category) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+                fetch(`${FIREBASE_URL}/products/${key}.json`, { method: 'DELETE' })
+                .then(() => { allProductsData = null; loadCategoryProducts(category); });
+            }
         }
 
         function addNewProduct() {
-            const file = document.getElementById('prodFile').files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                fetch(`${FIREBASE_URL}/products.json`, { method: 'POST', body: JSON.stringify({
-                    name: document.getElementById('prodName').value,
-                    price: document.getElementById('prodPrice').value,
-                    cat: document.getElementById('prodCat').value,
-                    img: reader.result
-                })}).then(() => { alert("تم النشر بنجاح!"); location.reload(); });
-            };
-            reader.readAsDataURL(file);
+            const btn = document.getElementById('publishBtn');
+            const name = document.getElementById('prodName').value;
+            const price = document.getElementById('prodPrice').value;
+            const cat = document.getElementById('prodCat').value;
+            const imgUrl = document.getElementById('prodImgUrl').value;
+
+            if(!name || !price || !imgUrl) return alert("أرجوك املأ كل البيانات!");
+
+            btn.disabled = true; btn.innerText = "جاري النشر... ⏳";
+
+            fetch(`${FIREBASE_URL}/products.json`, { 
+                method: 'POST', body: JSON.stringify({ name, price, cat, img: imgUrl })
+            })
+            .then(() => { 
+                alert("تم النشر بنجاح! 🎉"); 
+                document.getElementById('prodName').value = '';
+                document.getElementById('prodPrice').value = '';
+                document.getElementById('prodImgUrl').value = '';
+                allProductsData = null; switchPage(cat);
+            })
+            .catch(() => alert("حصل مشكلة، جرب تاني."))
+            .finally(() => { btn.disabled = false; btn.innerText = "نشر المنتج فوراً 🚀"; });
         }
 
-        function addToCart(name, price) { cart.push({name, price}); alert("🛒 تمت الإضافة"); }
+        function wipeAllOldData() {
+            if(confirm("تحذير ⚠️: سيتم مسح كل شيء! متأكد؟")) {
+                fetch(`${FIREBASE_URL}/products.json`, { method: 'DELETE' })
+                .then(() => { alert("تم التنظيف بنجاح! 🚀"); allProductsData = null; location.reload(); });
+            }
+        }
+
+        function addToCart(name, price) { 
+            cart.push({name, price}); 
+            const countEl = document.getElementById('cart-count');
+            countEl.innerText = cart.length;
+            
+            // حركة ذكية للفت الانتباه لما تضيف حاجة
+            countEl.style.transform = 'scale(1.5)';
+            countEl.style.background = '#4A323C';
+            setTimeout(() => {
+                countEl.style.transform = 'scale(1)';
+                countEl.style.background = 'white';
+            }, 300);
+        }
+
         function sendWhatsAppCart() {
-            let msg = "طلباتي من المتجر:%0A";
-            cart.forEach(item => msg += `- ${item.name} (${item.price} ج.م)%0A`);
+            if(cart.length === 0) return alert("سلتك فارغة! تسوقي أولاً 💖");
+            let msg = "أهلاً The Girl Store ✨، أريد طلب الآتي:%0A%0A";
+            let total = 0;
+            cart.forEach((item, index) => {
+                msg += `${index + 1}- 🛍️ ${item.name} (${item.price} ج.م)%0A`;
+                total += parseInt(item.price);
+            });
+            msg += `%0A💰 الإجمالي: ${total} ج.م%0A%0Aفي انتظار تأكيد الطلب، شكراً لكم 🌸`;
             window.open(`https://wa.me/201062082286?text=${msg}`);
         }
-
-        loadAllProducts();
     </script>
 </body>
 </html>
